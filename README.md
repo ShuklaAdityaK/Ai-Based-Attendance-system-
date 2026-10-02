@@ -14,6 +14,8 @@ analytics, Excel/PDF reports, an immutable audit trail, and local backup/restore
 
 ---
 
+> **New here?** Read the step-by-step [User Guide](docs/USER_GUIDE.md).
+
 ## 1. Quick start (Windows / Linux, Python 3.10 or 3.11)
 
 ```bash
