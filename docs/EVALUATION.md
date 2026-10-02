@@ -68,7 +68,7 @@ attendance (0.18), maximum achievable % (0.14).
 For bursts, the first record of each injected burst has a normal gap, so it is rarely flagged; the later
 records are caught.
 
-## 5. Unit tests: 37 passed
+## 5. Unit tests: 53 passed
 
 `pytest -q`: attendance rules at the grace and cutoff boundaries, auto-absent, duplicate-mark prevention
 (application and `UNIQUE` constraint), corrections and audit immutability, bcrypt, lockout,

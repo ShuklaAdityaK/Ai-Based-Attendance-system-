@@ -135,7 +135,7 @@ contamination.
 ## 7. Testing & evaluation
 
 ```bash
-.venv\Scripts\python -m pytest -q                                 # 37 tests
+.venv\Scripts\python -m pytest -q                                 # 53 tests
 .venv\Scripts\python scripts/evaluate_models.py                   # risk model + anomaly injection
 .venv\Scripts\python scripts/evaluate_recognition.py --lfw         # FAR/FRR on LFW (public)
 .venv\Scripts\python scripts/evaluate_recognition.py --data eval_data/faces   # your volunteers
@@ -146,7 +146,9 @@ contamination.
 The unit tests cover the rule boundaries (grace and cutoff, auto-absent), duplicate
 prevention, audit immutability, lockout, password policy, **access control** (a
 student calling about 30 admin and other-user functions is blocked), ML sanity,
-anomaly detection on injected cases, the reports, and a backup round-trip. Results are
+anomaly detection on injected cases, the reports, a backup round-trip, and the liveness challenge and
+kiosk state machine (spoof, unknown face, multiple faces, wrong subject, duplicate mark), with the neural
+networks replaced by fakes. Results are
 written to `eval_results/`. See `docs/EVALUATION.md` for the measured numbers.
 
 ## 8. Security & privacy
@@ -172,7 +174,26 @@ written to `eval_results/`. See `docs/EVALUATION.md` for the measured numbers.
   `liveness.passive_threshold` with `evaluate_liveness.py` on the actual kiosk camera.
 * The kiosk serves one student at a time (frames with more than one face are rejected).
 
-## 10. Future scope
+## 10. Third-party models and licences
+
+The pretrained models are not stored in this repository. `scripts/download_models.py`
+downloads them from their original sources and checks each file against a pinned
+SHA-256 hash.
+
+| Model | Source | Licence |
+|---|---|---|
+| YuNet face detector | OpenCV Zoo | MIT |
+| ArcFace R50 (`w600k_r50`, buffalo_l pack) | InsightFace | **Non-commercial research use only** |
+| MiniFASNetV2 / V1SE | Minivision Silent-Face-Anti-Spoofing (ONNX export by yakhyo/face-anti-spoofing) | Apache 2.0 |
+| Face Landmarker | Google MediaPipe | Apache 2.0 |
+| LFW dataset (evaluation only) | University of Massachusetts, Amherst | research use |
+
+This is an academic project, which the InsightFace licence permits. Any commercial
+deployment would need a commercially licensed face-recognition model in place of
+ArcFace `buffalo_l`. Licence terms can change, so check each upstream page before
+reuse.
+
+## 11. Future scope
 
 GPS/geofencing for self check-in, QR attendance, email/SMS alerts, cloud sync,
 mobile/PWA app, scheduled backups, encryption at rest, a Faculty role, leave/excused

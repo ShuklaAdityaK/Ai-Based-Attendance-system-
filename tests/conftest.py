@@ -10,6 +10,23 @@ from core import auth, config, db  # noqa: E402
 from core.access import Actor  # noqa: E402
 
 
+@pytest.fixture(autouse=True, scope="session")
+def _isolated_log(tmp_path_factory):
+    """Keep test runs out of the application's logs/system.log."""
+    import logging
+
+    saved = list(config.log.handlers)
+    for h in saved:
+        config.log.removeHandler(h)
+    handler = logging.FileHandler(tmp_path_factory.mktemp("logs") / "test.log", encoding="utf-8")
+    config.log.addHandler(handler)
+    yield
+    config.log.removeHandler(handler)
+    handler.close()
+    for h in saved:
+        config.log.addHandler(h)
+
+
 @pytest.fixture()
 def env(tmp_path, monkeypatch):
     """Isolated database + output folders for each test."""
