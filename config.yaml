@@ -1,0 +1,80 @@
+# AI-Based Smart Attendance & Analytics System - configuration
+# Values here are defaults. Keys listed under "admin-editable" can be
+# overridden at runtime from Admin > System > Settings (stored in the
+# `settings` table, which takes precedence over this file).
+
+institution:
+  name: "Shambhunath Institute of Engineering & Technology, Prayagraj"
+  department: "Department of Computer Science & Engineering"
+
+paths:
+  database: data/attendance.db
+  reports: data/reports
+  backups: data/backups
+  raw_faces: data/raw_faces          # used only when enrollment.keep_raw_images is true
+  models: models                     # pretrained ONNX models
+  trained_models: models/trained     # risk / anomaly models produced by this app
+  log_file: logs/system.log
+
+auth:
+  max_failed_logins: 5               # admin-editable
+  lockout_minutes: 15                # admin-editable
+  session_timeout_minutes: 30        # admin-editable (inactivity)
+  min_password_length: 8
+
+enrollment:
+  min_frames: 5
+  max_frames: 10
+  min_face_px: 90                    # minimum face box width in pixels
+  min_face_ratio: 0.18               # or minimum face width as a fraction of frame width
+  blur_threshold: 60.0               # variance of Laplacian on the face crop
+  brightness_min: 60                 # mean grey level of the face crop
+  brightness_max: 200
+  contrast_min: 25                   # std-dev of grey level of the face crop
+  max_abs_yaw_deg: 35
+  keep_raw_images: false             # privacy default: discard frames after embedding
+
+recognition:
+  detector_model: face_detection_yunet_2023mar.onnx
+  detector_score_threshold: 0.8
+  embedding_model: arcface_w600k_r50.onnx
+  model_name: "ArcFace-R50 (InsightFace buffalo_l)"
+  match_threshold: 0.60              # cosine DISTANCE; admin-editable; tune with scripts/evaluate_recognition.py
+  duplicate_threshold: 0.55          # cosine distance below which a new enrollment is a duplicate
+
+liveness:
+  passive_models:
+    - {file: MiniFASNetV2.onnx, scale: 2.7}
+    - {file: MiniFASNetV1SE.onnx, scale: 4.0}
+  passive_threshold: 0.45            # min fused "real" probability ("real" must also be the top class); admin-editable
+  passive_frames: 5                  # frames averaged for the passive score
+  landmarker_model: face_landmarker.task
+  challenge_timeout_seconds: 10      # admin-editable
+  blinks_required: 2
+  ear_closed_ratio: 0.80             # eye counts as closed when EAR < ratio * open baseline
+  blink_score_closed: 0.45           # ...or when the MediaPipe eyeBlink blendshape exceeds this
+  turn_ratio_delta: 0.18             # nose offset from centre (0..0.5) counted as a head turn
+  turn_hold_frames: 3
+
+kiosk:
+  result_display_seconds: 3
+  max_attempts_per_face: 3
+  frame_width: 640
+  frame_height: 480
+
+attendance:
+  grace_minutes: 10                  # admin-editable
+  late_cutoff_minutes: 30            # admin-editable
+  late_weight: 1.0                   # admin-editable
+  required_percentage: 75            # admin-editable
+  planned_sessions_per_subject: 40   # default semester length used for "sessions remaining"
+
+ml:
+  risk_low: 0.4
+  risk_high: 0.7
+  min_sessions_for_model: 5
+  synthetic_students_per_archetype: 120
+  synthetic_semesters: 3
+  random_seed: 42
+  anomaly_contamination: 0.05        # admin-editable
+  anomaly_min_records: 30

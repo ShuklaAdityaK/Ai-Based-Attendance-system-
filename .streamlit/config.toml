@@ -1,0 +1,13 @@
+[theme]
+primaryColor = "#1c5cab"
+
+[client]
+showSidebarNavigation = true
+toolbarMode = "minimal"
+
+[server]
+maxUploadSize = 500
+runOnSave = false
+
+[runner]
+magicEnabled = false

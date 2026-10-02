@@ -1,0 +1,23 @@
+# --- Biometric & personal data: NEVER commit ---
+data/
+eval_data/
+logs/
+*.db
+*.db-journal
+*.db-wal
+
+# Trained models are regenerated from the admin panel
+models/trained/
+
+# Pretrained models are downloaded by scripts/download_models.py
+models/*.onnx
+models/*.task
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# Streamlit secrets
+.streamlit/secrets.toml

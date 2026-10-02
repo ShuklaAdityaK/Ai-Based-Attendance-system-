@@ -1,0 +1,4 @@
+trial_no,date,tester,attack_type (real/print/replay),device_or_print_details,challenge_shown (blink/turn_left/turn_right),passive_result (pass/fail),passive_score,challenge_result (pass/fail/timeout),final_outcome (accepted/rejected),notes
+1,,,real,,,,,,,
+2,,,print,"A4 colour print, matte",,,,,,
+3,,,replay,"phone screen, max brightness",,,,,,
